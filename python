@@ -1,2 +1,129 @@
 pip install beautifulsoup4
 pip install requests
+
+import requests
+from bs4 import BeautifulSoup
+
+# Define the URL of the document
+url = 'https://docs.google.com/document/d/1Boy_zspeK2LJSUt5_Fe3C17l70pGK0rZ0ajBkHhxR5Y/edit?usp=sharing'
+
+# Send a GET request to the URL and retrieve the HTML content
+response = requests.get(url)
+html_content = response.text
+
+# Parse the HTML content using BeautifulSoup
+soup = BeautifulSoup(html_content, 'html.parser')
+
+# Find the main content of the document
+main_content = soup.find(class_='kix-page-content-wrapper')
+
+# Find all the track names and artists
+track_elements = main_content.find_all('h3')
+artist_elements = main_content.find_all('h4')
+
+# Find all the URLs to the YouTube pages
+youtube_elements = main_content.find_all('a', href=True)
+
+# Create a list to store the tracks
+tracks = []
+
+# Iterate over the track elements and extract the information
+for i in range(len(track_elements)):
+    track_name = track_elements[i].text.strip()
+    artist_name = artist_elements[i].text.strip()
+    youtube_url = youtube_elements[i]['href']
+    
+    # Create a dictionary to store the track information
+    track_info = {
+        'Track Name': track_name,
+        'Artist': artist_name,
+        'YouTube URL': youtube_url
+    }
+    
+    # Add the track information to the list
+    tracks.append(track_info)
+
+# Print the tracks
+for i, track in enumerate(tracks):
+    print(f"Track {i+1}: {track['Track Name']} - {track['Artist']}")
+    print(f"YouTube URL: {track['YouTube URL']}")
+    print()
+
+from docx import Document
+
+def create_playlist_document():
+    # Create a new document
+    document = Document()
+    
+    # Add a title to the document
+    document.add_heading('Playlist', level=1)
+    
+    # Add the tracks to the document
+    tracks = [
+        {'name': 'Track 1', 'artist': 'Artist 1', 'url': 'https://www.youtube.com/track1'},
+        {'name': 'Track 2', 'artist': 'Artist 2', 'url': 'https://www.youtube.com/track2'},
+        {'name': 'Track 3', 'artist': 'Artist 3', 'url': 'https://www.youtube.com/track3'},
+    ]
+    
+    # Add each track as a numbered list item
+    for index, track in enumerate(tracks, start=1):
+        document.add_paragraph(f'{index}. {track["name"]} - {track["artist"]}')
+        document.add_paragraph(f'URL: {track["url"]}')
+        document.add_paragraph()  # Add an empty paragraph for spacing
+    
+    # Save the document
+    document.save('playlist.docx')
+
+# Call the function to create the playlist document
+create_playlist_document()
+
+# Import necessary libraries
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
+# Load the credentials from a service account key file
+credentials = service_account.Credentials.from_service_account_file('path/to/service_account_key.json')
+
+# Create a service object for the Google Docs API
+service = build('docs', 'v1', credentials=credentials)
+
+# Retrieve the document contents
+document_id = '1Boy_zspeK2LJSUt5_Fe3C17l70pGK0rZ0ajBkHhxR5Y'
+document = service.documents().get(documentId=document_id).execute()
+
+# Extract the contents from the document
+contents = document['body']['content']
+
+tracks = []
+
+# Iterate over the table rows
+for row in table_rows:
+    # Extract the track name, artist, and URL from each cell
+    track_name
+
+pip install python-docx
+
+from docx import Document
+
+# Create a new Word document
+document = Document()
+
+# Add a title to the document
+document.add_heading('Playlist', 0)
+
+# Open the link to the document and read the tracks
+# For simplicity, let's assume the tracks are already fetched
+tracks = [
+    {'name': 'Track 1', 'artist': 'Artist 1', 'url': 'https://www.youtube.com/track1'},
+    {'name': 'Track 2', 'artist': 'Artist 2', 'url': 'https://www.youtube.com/track2'},
+    {'name': 'Track 3', 'artist': 'Artist 3', 'url': 'https://www.youtube.com/track3'},
+    # ...
+]
+
+# Add the tracks to the document
+for i, track in enumerate(tracks, start=1):
+    # Add track name, artist, and URL as separate columns
+    document.add_paragraph(f'{i}. {track["name"]}\t{track["artist"]}\t{track["url"]}')
+
+# Save the document
+document.save('playlist.docx')
